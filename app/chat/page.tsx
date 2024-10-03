@@ -5,13 +5,10 @@ import { useRef, useEffect } from 'react'
 import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Components } from 'react-markdown'
 
-// 在文件顶部添加这个类型定义
-type CodeProps = {
-  inline?: boolean;
-  className?: string;
-  children: React.ReactNode;
-} & React.HTMLAttributes<HTMLElement>;
+// 修改 CodeProps 类型定义
+type CodeProps = Components['code']
 
 export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
@@ -39,12 +36,12 @@ export default function ChatPage() {
                   remarkPlugins={[remarkGfm]}
                   className="markdown-body"
                   components={{
-                    pre: (props) => (
+                    pre: ({ children }) => (
                       <div className="overflow-auto w-full my-2">
-                        <pre {...props} />
+                        <pre>{children}</pre>
                       </div>
                     ),
-                    code: ({ inline, className, children, ...props }: CodeProps) => (
+                    code: ({ inline, className, children, ...props }) => (
                       <code className={`${className} ${inline ? 'inline-code' : 'block-code'}`} {...props}>
                         {children}
                       </code>
