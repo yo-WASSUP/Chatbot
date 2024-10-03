@@ -8,7 +8,7 @@ import remarkGfm from 'remark-gfm'
 import { Components } from 'react-markdown'
 
 // 修改 CodeProps 类型定义
-type CodeProps = Components['code'] & { inline?: boolean }
+type CodeProps = Components['code']
 
 export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
@@ -41,11 +41,20 @@ export default function ChatPage() {
                         <pre>{children}</pre>
                       </div>
                     ),
-                    code: ({ inline, className, children, ...props }: CodeProps) => (
-                      <code className={`${className} ${inline ? 'inline-code' : 'block-code'}`} {...props}>
-                        {children}
-                      </code>
-                    ),
+                    code: ({ inline, className, children, ...props }) => {
+                      const match = /language-(\w+)/.exec(className || '')
+                      return !inline ? (
+                        <pre className={match ? `language-${match[1]}` : ''}>
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        </pre>
+                      ) : (
+                        <code className={`${className} inline-code`} {...props}>
+                          {children}
+                        </code>
+                      )
+                    },
                   }}
                 >
                   {m.content}
