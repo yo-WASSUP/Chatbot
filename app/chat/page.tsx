@@ -3,6 +3,8 @@
 import { useChat } from 'ai/react'
 import { useRef, useEffect } from 'react'
 import Image from 'next/image'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
@@ -26,7 +28,24 @@ export default function ChatPage() {
                 </div>
               )}
               <div className={`max-w-[70%] px-4 py-2 rounded-lg ${m.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-800'}`}>
-                {m.content}
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  className="markdown-body"
+                  components={{
+                    pre: ({ node, ...props }) => (
+                      <div className="overflow-auto w-full my-2">
+                        <pre {...props} />
+                      </div>
+                    ),
+                    code: ({ node, inline = false, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode; [key: string]: any }) => (
+                      <code className={`${className} ${inline ? 'inline-code' : 'block-code'}`} {...props}>
+                        {children}
+                      </code>
+                    ),
+                  }}
+                >
+                  {m.content}
+                </ReactMarkdown>
               </div>
               {m.role === 'user' && (
                 <div className="flex-shrink-0">
@@ -41,7 +60,7 @@ export default function ChatPage() {
         <form onSubmit={handleSubmit} className="p-4 border-t border-gray-200">
           <div className="flex space-x-4">
             <input
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 chat-input"
               value={input}
               placeholder="Type a message..."
               onChange={handleInputChange}
