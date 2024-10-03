@@ -6,6 +6,13 @@ import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+// 在文件顶部添加这个类型定义
+type CodeProps = {
+  inline?: boolean;
+  className?: string;
+  children: React.ReactNode;
+} & React.HTMLAttributes<HTMLElement>;
+
 export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: '/api/chat',
@@ -32,14 +39,12 @@ export default function ChatPage() {
                   remarkPlugins={[remarkGfm]}
                   className="markdown-body"
                   components={{
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    pre: ({ node, ...props }) => (
+                    pre: (props) => (
                       <div className="overflow-auto w-full my-2">
                         <pre {...props} />
                       </div>
                     ),
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    code: ({ node, inline, className, children, ...props }) => (
+                    code: ({ inline, className, children, ...props }: CodeProps) => (
                       <code className={`${className} ${inline ? 'inline-code' : 'block-code'}`} {...props}>
                         {children}
                       </code>
