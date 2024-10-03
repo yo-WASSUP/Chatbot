@@ -6,9 +6,10 @@ import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Components } from 'react-markdown'
+import { ComponentPropsWithoutRef } from 'react'
 
 // 修改 CodeProps 类型定义
-type CodeProps = Components['code']
+type CodeProps = ComponentPropsWithoutRef<'code'> & { inline?: boolean }
 
 export default function ChatPage() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
@@ -41,7 +42,7 @@ export default function ChatPage() {
                         <pre>{children}</pre>
                       </div>
                     ),
-                    code: ({ inline, className, children, ...props }) => {
+                    code: ({ inline, className, children, ...props }: CodeProps) => {
                       const match = /language-(\w+)/.exec(className || '')
                       return !inline ? (
                         <pre className={match ? `language-${match[1]}` : ''}>
