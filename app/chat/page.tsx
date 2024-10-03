@@ -32,12 +32,14 @@ export default function ChatPage() {
                   remarkPlugins={[remarkGfm]}
                   className="markdown-body"
                   components={{
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     pre: ({ node, ...props }) => (
                       <div className="overflow-auto w-full my-2">
                         <pre {...props} />
                       </div>
                     ),
-                    code: ({ node, inline = false, className, children, ...props }: { inline?: boolean; className?: string; children?: React.ReactNode; [key: string]: any }) => (
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    code: ({ node, inline, className, children, ...props }) => (
                       <code className={`${className} ${inline ? 'inline-code' : 'block-code'}`} {...props}>
                         {children}
                       </code>
